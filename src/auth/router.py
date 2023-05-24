@@ -3,6 +3,7 @@ from typing import Annotated, Any
 from fastapi import APIRouter, Depends
 from sqlalchemy import select, insert
 from sqlalchemy.ext.asyncio import AsyncSession
+from asyncpg.exceptions import PostgresError
 
 from auth.models import User
 from auth.schemas import UserRead, UserCreate
@@ -30,8 +31,7 @@ async def register_user(
         session: Annotated[AsyncSession, Depends(get_async_session)],
         user: UserCreate
 ) -> UserRead:
-    user_dict = user.dict()
-    user_dict.pop('re_password')
+    user_dict = user.dict(exclude={'re_password'})
 
     stmt = insert(User).values(**user_dict)
     await session.execute(stmt)
