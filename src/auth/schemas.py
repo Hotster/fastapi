@@ -1,16 +1,28 @@
 from uuid import UUID
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, validator
 
 
 class UserBase(BaseModel):
-    username: Field(str, min_length=3, max_length=50)
-    email: Field(str, min_length=3, max_length=250)
+    username: str
+    email: str
 
 
 class UserCreate(UserBase):
-    password: Field(str, min_length=8, max_length=50)
+    password: str
+    re_password: str
 
 
-class User(UserBase):
+    @validator('re_password')
+    @classmethod
+    def check_re_password(cls, value):
+        if value != cls.password:
+            raise ValueError("Passwords don't match")
+        return value
+
+
+class UserRead(UserBase):
     id: UUID
+
+    class Config:
+        orm_mode = True
