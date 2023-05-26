@@ -7,10 +7,10 @@ from sqlalchemy import pool
 
 from alembic import context
 
-
 sys.path.append(os.path.join(sys.path[0], 'src'))
 
 from src.auth.models import User
+from src.tasks.models import Task
 from src.config import POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB, POSTGRES_HOST, POSTGRES_PORT
 
 # this is the Alembic Config object, which provides
